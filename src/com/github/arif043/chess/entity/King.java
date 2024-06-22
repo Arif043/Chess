@@ -6,12 +6,12 @@ package com.github.arif043.chess.entity;
  */
 public class King extends Figure {
 
-    public King(int xPosition, int yPosition) {
-        super(xPosition, yPosition);
+    public King(int xPosition, int yPosition, boolean isBlack) {
+        super(xPosition, yPosition, isBlack);
     }
 
     @Override
-    public void validateMoves() {
+    public void validateMoves(Figure[][] figure) {
 
     }
 }

@@ -7,6 +7,12 @@ package com.github.arif043.chess.entity;
 public class Player {
 
     private String name;
+    private boolean isBlack;
+
+    public Player(String name, boolean isBlack) {
+        this.name = name;
+        this.isBlack = isBlack;
+    }
 
     public String getName() {
         return name;
@@ -14,5 +20,9 @@ public class Player {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isBlack() {
+        return isBlack;
     }
 }
