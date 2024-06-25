@@ -1,5 +1,7 @@
 package com.github.arif043.chess.view;
 
+import com.github.arif043.chess.service.RootService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -12,9 +14,11 @@ import java.time.Year;
  */
 public class Application {
 
+    private RootService rootService;
     private JFrame frame;
 
-    public Application() {
+    public Application(RootService rootService) {
+        this.rootService = rootService;
         // init ui
         frame = new JFrame("Chess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +39,17 @@ public class Application {
         quitButton.setFont(buttonFront);
         startButton.setBackground(Color.CYAN.brighter());
         quitButton.setBackground(Color.PINK);
-        startButton.addActionListener(e -> {});
+        startButton.addActionListener(e -> {
+            var firstNamePlayer = firstPlayerNameField.getText().isEmpty() ? "Player 1" : firstPlayerNameField.getText();
+            var secondNamePlayer = secondPlayerNameField.getText().isEmpty() ? "Player 2" : secondPlayerNameField.getText();
+            var gameScene = new GameScene(rootService);
+            frame.getContentPane().removeAll();
+            frame.getContentPane().repaint();
+            frame.add(gameScene.getMainPanel());
+            frame.setSize(700, 740);
+            frame.setLocationRelativeTo(null);
+
+        });
         quitButton.addActionListener(e -> System.exit(0));
 
         buttonPanel.setBackground(background);
@@ -54,6 +68,7 @@ public class Application {
         frame.getContentPane().setBackground(background);
         frame.add(contentPane);
         frame.pack();
+        frame.setSize((int) (frame.getWidth() * 1.2), frame.getHeight());
         frame.setLocationRelativeTo(null);
         contentPane.requestFocus();
         frame.setVisible(true);

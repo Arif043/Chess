@@ -1,6 +1,10 @@
 package com.github.arif043.chess;
 
+import com.github.arif043.chess.service.RootService;
 import com.github.arif043.chess.view.Application;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Arif Ertugrul
@@ -9,6 +13,6 @@ import com.github.arif043.chess.view.Application;
 public class Main {
 
     public static void main(String[] args) {
-        new Application();
+                new Application(new RootService());
     }
 }
