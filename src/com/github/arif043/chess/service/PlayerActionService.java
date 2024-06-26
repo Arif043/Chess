@@ -8,6 +8,16 @@ import com.github.arif043.chess.entity.Figure;
  */
 public class PlayerActionService {
 
+    private RootService rootService;
+
+    public PlayerActionService(RootService rootService) {
+        this.rootService = rootService;
+    }
+
+    public void showMoveOptions() {
+//        rootService.getCurrentGame().
+    }
+
     public void moveFigure(Figure figure) {
 
     }

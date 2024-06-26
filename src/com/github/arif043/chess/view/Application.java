@@ -1,11 +1,11 @@
 package com.github.arif043.chess.view;
 
+import com.github.arif043.chess.service.GameService;
 import com.github.arif043.chess.service.RootService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.time.Year;
 
 /**
@@ -15,10 +15,16 @@ import java.time.Year;
 public class Application {
 
     private RootService rootService;
+    private GameScene gameScene;
     private JFrame frame;
 
-    public Application(RootService rootService) {
-        this.rootService = rootService;
+    public Application() {
+        rootService = new RootService();
+        gameScene = new GameScene(rootService);
+        initView();
+    }
+
+    private void initView() { // I PLAY AS
         // init ui
         frame = new JFrame("Chess");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,29 +34,35 @@ public class Application {
 
         final var background = Color.YELLOW;
         var contentPane = new JPanel();
+        var labelPanel = new JPanel();
         var buttonPanel = new JPanel();
         var firstPlayerNameField = new HintTextField("Player 1");
         var secondPlayerNameField = new HintTextField("Player 2");
+        var textLabel = new JLabel("I play as");
         var startButton = new JButton("Start");
         var quitButton = new JButton("Quit");
 
-        var buttonFront = new Font("Arial", Font.BOLD, 24);
-        startButton.setFont(buttonFront);
-        quitButton.setFont(buttonFront);
+        labelPanel.setBackground(background);
+
+        var buttonFont = new Font("Arial", Font.BOLD, 24);
+        startButton.setFont(buttonFont);
+        quitButton.setFont(buttonFont);
         startButton.setBackground(Color.CYAN.brighter());
         quitButton.setBackground(Color.PINK);
         startButton.addActionListener(e -> {
             var firstNamePlayer = firstPlayerNameField.getText().isEmpty() ? "Player 1" : firstPlayerNameField.getText();
             var secondNamePlayer = secondPlayerNameField.getText().isEmpty() ? "Player 2" : secondPlayerNameField.getText();
-            var gameScene = new GameScene(rootService);
+            rootService.getGameService().startNewGame(firstNamePlayer, secondNamePlayer);
+            gameScene.prepareGame();
             frame.getContentPane().removeAll();
             frame.getContentPane().repaint();
             frame.add(gameScene.getMainPanel());
             frame.setSize(700, 740);
             frame.setLocationRelativeTo(null);
-
         });
         quitButton.addActionListener(e -> System.exit(0));
+
+        labelPanel.add(textLabel);
 
         buttonPanel.setBackground(background);
         buttonPanel.add(startButton);
@@ -62,6 +74,8 @@ public class Application {
         contentPane.add(firstPlayerNameField);
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(secondPlayerNameField);
+        contentPane.add(Box.createVerticalStrut(15));
+        contentPane.add(labelPanel);
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(buttonPanel);
 
