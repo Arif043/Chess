@@ -1,6 +1,9 @@
 package com.github.arif043.chess.service;
 
 import com.github.arif043.chess.entity.Figure;
+import com.github.arif043.chess.entity.Position;
+
+import java.util.ArrayList;
 
 /**
  * @author Arif Ertugrul
@@ -14,8 +17,11 @@ public class PlayerActionService {
         this.rootService = rootService;
     }
 
-    public void showMoveOptions() {
-//        rootService.getCurrentGame().
+    public ArrayList<Position> showMoveOptions(int x, int y) {
+        var game = rootService.getCurrentGame();
+        var currentFigure = game.getBoard()[y][x];
+        System.out.println(currentFigure.getClass().getSimpleName());
+        return currentFigure.validateMoves(game.getBoard());
     }
 
     public void moveFigure(Figure figure) {

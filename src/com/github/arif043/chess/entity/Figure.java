@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 /**
  * @author Arif Ertugrul
@@ -33,7 +34,7 @@ public abstract class Figure {
         this.isBlack = isBlack;
     }
 
-    public abstract void validateMoves(Figure[][] board);
+    public abstract ArrayList<Position> validateMoves(Figure[][] board);
 
      protected static BufferedImage getScaledImage(int x, int y, int w, int h, int newWidth, int newHeight) {
          Image toolkitImage = WHOLE_IMG.getSubimage(x, y, w, h).getScaledInstance(newWidth, newHeight,

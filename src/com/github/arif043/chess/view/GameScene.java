@@ -94,10 +94,14 @@ public class GameScene {
                         break OuterLoop;
                     }
                 }
-            if (selectedX == -1 && selectedY == -1 && (currentPlayer.isBlack() == board[y][x].isBlack())) {
+            if (selectedX == -1 && selectedY == -1 && board[y][x] != null && (currentPlayer.isBlack() == board[y][x].isBlack())) {
                 selectedX = x;
                 selectedY = y;
                 clickedButton.setBackground(Color.YELLOW.darker());
+                var options = rootService.getPlayerActionService().showMoveOptions(selectedX, selectedY);
+                System.out.println(options);
+                for (Position pos : options)
+                    buttonBoard[pos.yCord()][pos.xCord()].setBackground(new Color(92, 226, 127));
             }
         };
 
@@ -107,4 +111,5 @@ public class GameScene {
             }
         }
     }
+
 }

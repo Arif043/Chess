@@ -1,6 +1,7 @@
 package com.github.arif043.chess.entity;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 /**
  * @author Arif Ertugrul
@@ -20,7 +21,9 @@ public class Knight extends Figure {
     }
 
     @Override
-    public void validateMoves(Figure[][] figure) {
+    public ArrayList<Position> validateMoves(Figure[][] figure) {
+        var res = new ArrayList<Position>();
+        return null;
 
     }
 }

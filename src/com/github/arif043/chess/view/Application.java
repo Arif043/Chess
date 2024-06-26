@@ -35,14 +35,19 @@ public class Application {
         final var background = Color.YELLOW;
         var contentPane = new JPanel();
         var labelPanel = new JPanel();
+        var radioPanel = new JPanel();
         var buttonPanel = new JPanel();
         var firstPlayerNameField = new HintTextField("Player 1");
         var secondPlayerNameField = new HintTextField("Player 2");
         var textLabel = new JLabel("I play as");
+        var whiteButton = new JRadioButton("White");
+        var blackButton = new JRadioButton("Black");
+        var randomButton = new JRadioButton("Random");
         var startButton = new JButton("Start");
         var quitButton = new JButton("Quit");
 
         labelPanel.setBackground(background);
+        radioPanel.setBackground(background);
 
         var buttonFont = new Font("Arial", Font.BOLD, 24);
         startButton.setFont(buttonFont);
@@ -64,6 +69,17 @@ public class Application {
 
         labelPanel.add(textLabel);
 
+        var buttonGroup = new ButtonGroup();
+        buttonGroup.add(whiteButton);
+        buttonGroup.add(blackButton);
+        buttonGroup.add(randomButton);
+        whiteButton.setBackground(background);
+        blackButton.setBackground(background);
+        randomButton.setBackground(background);
+        radioPanel.add(whiteButton);
+        radioPanel.add(blackButton);
+        radioPanel.add(randomButton);
+
         buttonPanel.setBackground(background);
         buttonPanel.add(startButton);
         buttonPanel.add(quitButton);
@@ -76,6 +92,8 @@ public class Application {
         contentPane.add(secondPlayerNameField);
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(labelPanel);
+        contentPane.add(Box.createVerticalStrut(15));
+        contentPane.add(radioPanel);
         contentPane.add(Box.createVerticalStrut(15));
         contentPane.add(buttonPanel);
 

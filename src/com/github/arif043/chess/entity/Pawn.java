@@ -1,10 +1,6 @@
 package com.github.arif043.chess.entity;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -27,21 +23,22 @@ public class Pawn extends Figure {
     }
 
     @Override
-    public void validateMoves(Figure[][] figure) {
+    public ArrayList<Position> validateMoves(Figure[][] figure) {
         var res = new ArrayList<Position>();
-        if (!moved && normalizedYPostion() == 1 && figure[getxPosition()][isBlack() ? 4 : 3] == null)
-            res.add(new Position(getxPosition(), isBlack() ? 4 : 3));
+        if (!moved && normalizedYPosition() == 1 && figure[getxPosition()][isBlack() ? 4 : 3] == null)
+            res.add(new Position(getxPosition(), isBlack() ? 3 : 4));
 
         if (figure[getxPosition()][getForwardYPos()] == null)
             res.add(new Position(getxPosition(), getForwardYPos()));
 
+        return res;
     }
 
-    private int normalizedYPostion() {
-        return isBlack() ? 7 - getyPosition() : getyPosition();
+    private int normalizedYPosition() {
+        return isBlack() ? getyPosition() : 7 - getyPosition();
     }
 
     private int getForwardYPos() {
-        return getyPosition() + (isBlack() ? -1 : 1);
+        return getyPosition() + (isBlack() ? 1 : -1);
     }
 }
