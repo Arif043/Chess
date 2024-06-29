@@ -2,7 +2,7 @@ package com.github.arif043.chess.entity;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.LinkedList;
 import java.util.function.Predicate;
 
 /**
@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 public class Rook extends Figure {
 
     public static final BufferedImage WHITE_IMG, BLACK_IMG;
-    private boolean continueTop, continueRight, continueBottom, continueLeft;
+    private boolean continueTop, continueRight, continueBottom, continueLeft, moved;
 
     static {
         WHITE_IMG = getScaledImage(1280, 0, 320, 320, 80, 80);
@@ -26,28 +26,23 @@ public class Rook extends Figure {
     public ArrayList<Position> validateMoves(Figure[][] board) {
         continueTop = continueRight = continueBottom = continueLeft = true;
         var res = new ArrayList<Position>();
+        var tempRes = new LinkedList<Position>();
         for (int step = 1; step < 8; step++) {
-            if (continueBottom) {
-                var pos = getVerticalValidatePlaces(board, cord -> cord < 8, step);
-                if (pos != null) res.add(pos);
-            }
-            if (continueLeft) {
-                var pos = getHorizontalValidatePlaces(board, cord -> cord >= 0, -step);
-                if (pos != null) res.add(pos);
-            }
-            if (continueTop) {
-                var pos = getVerticalValidatePlaces(board, cord -> cord >= 0, -step) ;
-                if (pos != null) res.add(pos);
-            }
-            if (continueRight) {
-                var pos = getHorizontalValidatePlaces(board, cord -> cord < 8, step);
-                if (pos != null) res.add(pos);
-            }
+            if (continueBottom)
+                tempRes.add(checkVerticalValidPlace(board, cord -> cord < 8, step));
+            if (continueLeft)
+                tempRes.add(checkHorizontalValidPlace(board, cord -> cord >= 0, -step));
+            if (continueTop)
+                tempRes.add(checkVerticalValidPlace(board, cord -> cord >= 0, -step));
+            if (continueRight)
+                tempRes.add(checkHorizontalValidPlace(board, cord -> cord < 8, step));
         }
+        for (Position pos : tempRes)
+            if (pos != null) res.add(pos);
         return res;
     }
 
-    private Position getVerticalValidatePlaces(Figure[][] board, Predicate<Integer> inequality, int stepY) {
+    private Position checkVerticalValidPlace(Figure[][] board, Predicate<Integer> inequality, int stepY) {
         Position res = null;
         if (inequality.test(getyPosition() + stepY)) {
             if (board[getyPosition() + stepY][getxPosition()] == null ||
@@ -64,7 +59,7 @@ public class Rook extends Figure {
         return res;
     }
 
-    private Position getHorizontalValidatePlaces(Figure[][] board, Predicate<Integer> inequality, int stepX) {
+    private Position checkHorizontalValidPlace(Figure[][] board, Predicate<Integer> inequality, int stepX) {
         Position res = null;
         if (inequality.test(getxPosition() + stepX)) {
             if (board[getyPosition()][getxPosition() + stepX] == null ||
@@ -79,5 +74,25 @@ public class Rook extends Figure {
             }
         }
         return res;
+    }
+
+    @Override
+    public void setxPosition(int xPosition) {
+        super.setxPosition(xPosition);
+        moved = true;
+    }
+
+    @Override
+    public void setyPosition(int yPosition) {
+        super.setyPosition(yPosition);
+        moved = true;
+    }
+
+    public boolean isMoved() {
+        return moved;
+    }
+
+    public void setMoved(boolean moved) {
+        this.moved = moved;
     }
 }

@@ -25,20 +25,33 @@ public class Pawn extends Figure {
     @Override
     public ArrayList<Position> validateMoves(Figure[][] figure) {
         var res = new ArrayList<Position>();
-        if (!moved && figure[getForwardYPos()][getxPosition()] == null && normalizedYPosition() == 1 && figure[isBlack() ? 3 : 4][getxPosition()] == null)
+        if (!moved && figure[getForwardYPos()][getxPosition()] == null && figure[isBlack() ? 3 : 4][getxPosition()] == null)
             res.add(new Position(getxPosition(), isBlack() ? 3 : 4));
 
         if (figure[getForwardYPos()][getxPosition()] == null)
             res.add(new Position(getxPosition(), getForwardYPos()));
 
-        return res;
-    }
+        if (getxPosition() - 1 >= 0 && figure[getForwardYPos()][getxPosition() - 1] != null && figure[getForwardYPos()][getxPosition() - 1].isBlack() != isBlack())
+            res.add(new Position(getxPosition() - 1, getForwardYPos()));
+        if (getxPosition() + 1 < 8 && figure[getForwardYPos()][getxPosition() + 1] != null && figure[getForwardYPos()][getxPosition() + 1].isBlack() != isBlack())
+            res.add(new Position(getxPosition() + 1, getForwardYPos()));
 
-    private int normalizedYPosition() {
-        return isBlack() ? getyPosition() : 7 - getyPosition();
+        return res;
     }
 
     private int getForwardYPos() {
         return getyPosition() + (isBlack() ? 1 : -1);
+    }
+
+    @Override
+    public void setxPosition(int xPosition) {
+        super.setxPosition(xPosition);
+        moved = true;
+    }
+
+    @Override
+    public void setyPosition(int yPosition) {
+        super.setyPosition(yPosition);
+        moved = true;
     }
 }

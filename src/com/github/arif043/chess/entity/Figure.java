@@ -66,6 +66,10 @@ public abstract class Figure {
         this.yPosition = yPosition;
     }
 
+    public Position getPosition() {
+         return new Position(xPosition, yPosition);
+    }
+
     public boolean isBlack() {
         return isBlack;
     }
