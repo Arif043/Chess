@@ -17,13 +17,15 @@ public class GameService {
     }
 
     public void startNewGame(String player1Name, String player2Name) {
-        rootService.setCurrentGame(new Game());
-        rootService.getCurrentGame().setFirstPlayer(new Player(player1Name, false));
-        rootService.getCurrentGame().setSecondPlayer(new Player(player2Name, true));
-        rootService.getCurrentGame().setCurrentPlayer(new Player(player1Name, true));
+        var game = new Game();
+        rootService.setCurrentGame(game);
+        game.setFirstPlayer(new Player(player1Name, false));
+        game.setSecondPlayer(new Player(player2Name, true));
+        game.setCurrentPlayer(game.getFirstPlayer());
         preparePlayersFigure(false);
         preparePlayersFigure(true);
-        rootService.getCurrentGame().setCurrentPlayer(rootService.getCurrentGame().getFirstPlayer());
+        game.setCurrentPlayer(game.getFirstPlayer());
+
     }
 
     private void preparePlayersFigure(boolean isBlack) {

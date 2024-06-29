@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * @author Arif Ertugrul
@@ -19,6 +20,7 @@ public class GameScene {
     private JPanel boardPanel;
     private final JPanel sidePanel;
     private final JButton[][] buttonBoard = new JButton[8][8];
+    private HashMap<JButton, Color> colorMap = new HashMap<>();
     private static final Color BROWN = new Color(91, 58, 41);
     private int selectedX = -1, selectedY = -1;
 
@@ -94,14 +96,25 @@ public class GameScene {
                         break OuterLoop;
                     }
                 }
-            if (selectedX == -1 && selectedY == -1 && board[y][x] != null && (currentPlayer.isBlack() == board[y][x].isBlack())) {
+            if (board[y][x] != null && currentPlayer.isBlack() == board[y][x].isBlack()) {
+                restoreBackgroundColors();
                 selectedX = x;
                 selectedY = y;
+                colorMap.put(clickedButton, clickedButton.getBackground());
                 clickedButton.setBackground(Color.YELLOW.darker());
                 var options = rootService.getPlayerActionService().showMoveOptions(selectedX, selectedY);
-                System.out.println(options);
-                for (Position pos : options)
+                for (Position pos : options) {
+                    colorMap.put(buttonBoard[pos.yCord()][pos.xCord()], buttonBoard[pos.yCord()][pos.xCord()].getBackground());
                     buttonBoard[pos.yCord()][pos.xCord()].setBackground(new Color(92, 226, 127));
+                }
+            }
+            else if (selectedX != -1) {
+                restoreBackgroundColors();
+                rootService.getPlayerActionService().moveFigure(selectedX, selectedY, x, y);
+                buttonBoard[y][x].setIcon(buttonBoard[selectedY][selectedX].getIcon());
+                buttonBoard[selectedY][selectedX].setIcon(null);
+
+                selectedX = selectedY = -1;
             }
         };
 
@@ -112,4 +125,9 @@ public class GameScene {
         }
     }
 
+    private void restoreBackgroundColors() {
+        for (JButton restoringButton : colorMap.keySet())
+            restoringButton.setBackground(colorMap.get(restoringButton));
+        colorMap.clear();
+    }
 }

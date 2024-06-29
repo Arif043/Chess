@@ -25,10 +25,10 @@ public class Pawn extends Figure {
     @Override
     public ArrayList<Position> validateMoves(Figure[][] figure) {
         var res = new ArrayList<Position>();
-        if (!moved && normalizedYPosition() == 1 && figure[getxPosition()][isBlack() ? 4 : 3] == null)
+        if (!moved && figure[getForwardYPos()][getxPosition()] == null && normalizedYPosition() == 1 && figure[isBlack() ? 3 : 4][getxPosition()] == null)
             res.add(new Position(getxPosition(), isBlack() ? 3 : 4));
 
-        if (figure[getxPosition()][getForwardYPos()] == null)
+        if (figure[getForwardYPos()][getxPosition()] == null)
             res.add(new Position(getxPosition(), getForwardYPos()));
 
         return res;

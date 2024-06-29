@@ -20,11 +20,19 @@ public class PlayerActionService {
     public ArrayList<Position> showMoveOptions(int x, int y) {
         var game = rootService.getCurrentGame();
         var currentFigure = game.getBoard()[y][x];
-        System.out.println(currentFigure.getClass().getSimpleName());
         return currentFigure.validateMoves(game.getBoard());
     }
 
-    public void moveFigure(Figure figure) {
-
+    public void moveFigure(int oldX, int oldY, int newX, int newY) {
+        System.out.println("move");
+        var board = rootService.getCurrentGame().getBoard();
+        if (board[oldY][oldX] == null) {
+            System.err.println("Moving figure doesnt exist");
+            return;
+        }
+        board[newY][newX] = board[oldY][oldX];
+        board[newY][newX].setxPosition(newX);
+        board[newY][newX].setyPosition(newY);
+        board[oldY][oldX] = null;
     }
 }
