@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class King extends Figure {
 
     public static final BufferedImage WHITE_IMG, BLACK_IMG;
-    private boolean moved, castlingAble = true;
+    private boolean moved, queensideCastleAble = true, kingsideCastleAble = true;
 
     static {
         WHITE_IMG = getScaledImage(0, 0, 320, 320, 80, 80);
@@ -33,6 +33,11 @@ public class King extends Figure {
                 }
             }
 
+        if (kingsideCastleAble)
+            res.add(new Position(7, getyPosition()));
+        if (queensideCastleAble)
+            res.add(new Position(0, getyPosition()));
+
         return res;
     }
 
@@ -52,15 +57,23 @@ public class King extends Figure {
         return moved;
     }
 
-    public void setMoved(boolean moved) {
-        this.moved = moved;
+    public void setMoved() {
+        moved = true;
     }
 
-    public boolean isCastlingAble() {
-        return castlingAble;
+    public boolean isQueensideCastleAble() {
+        return queensideCastleAble;
     }
 
-    public void setCastlingAble(boolean castlingAble) {
-        this.castlingAble = castlingAble;
+    public void setQueensideCastleAble(boolean kingsideCastleAble) {
+        this.queensideCastleAble = kingsideCastleAble;
+    }
+
+    public boolean isKingsideCastleAble() {
+        return kingsideCastleAble;
+    }
+
+    public void setKingsideCastleAble(boolean kingsideCastleAble) {
+        this.kingsideCastleAble = kingsideCastleAble;
     }
 }

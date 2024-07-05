@@ -66,6 +66,11 @@ public abstract class Figure {
         this.yPosition = yPosition;
     }
 
+    public void setPosition(Position position) {
+         xPosition = position.xCord();
+         yPosition = position.yCord();
+    }
+
     public Position getPosition() {
          return new Position(xPosition, yPosition);
     }

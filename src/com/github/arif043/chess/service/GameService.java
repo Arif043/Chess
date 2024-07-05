@@ -44,6 +44,10 @@ public class GameService {
         board[y][7] = new Rook(7, y, isBlack);
     }
 
+    private void generateFen() {
+
+    }
+
     public void endGame() {
 
     }

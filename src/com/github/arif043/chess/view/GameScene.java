@@ -21,7 +21,7 @@ public class GameScene {
     private final JPanel sidePanel;
     private final JButton[][] buttonBoard = new JButton[8][8];
     private HashMap<JButton, Color> colorMap = new HashMap<>();
-    private static final Color BROWN = new Color(91, 58, 41);
+    private static final Color BROWN = new Color(91, 58, 41), HIGHLIGHT = new Color(92, 226, 127);
     private int selectedX = -1, selectedY = -1;
 
     public GameScene(RootService rootService) {
@@ -32,7 +32,7 @@ public class GameScene {
         initBoardPanel();
     }
 
-    private void initBoardPanel() {
+    public void initBoardPanel() {
         var boardLayout = new GridLayout(8, 8);
         var black = false;
         boardPanel = new JPanel();
@@ -96,6 +96,18 @@ public class GameScene {
                         break OuterLoop;
                     }
                 }
+            if (selectedX != -1 && board[y][x] != null && board[selectedY][selectedX].isBlack() == board[y][x].isBlack() &&
+                    rootService.getPlayerActionService().checkCastling() && buttonBoard[y][x].getBackground() == HIGHLIGHT) {
+                restoreBackgroundColors();
+                rootService.getPlayerActionService().moveFigure(selectedX, selectedY, x, y);
+                var positions = rootService.getPlayerActionService().getPositionAfterCastling();
+                buttonBoard[selectedY][selectedX].setIcon(null);
+                buttonBoard[y][x].setIcon(null);
+                buttonBoard[positions[0].yCord()][positions[0].xCord()].setIcon(new ImageIcon(currentPlayer.isBlack() ? King.BLACK_IMG : King.WHITE_IMG));
+                buttonBoard[positions[1].yCord()][positions[1].xCord()].setIcon(new ImageIcon(currentPlayer.isBlack() ? Rook.BLACK_IMG : Rook.WHITE_IMG));
+                selectedX = selectedY = -1;
+                return;
+            }
             if (board[y][x] != null && currentPlayer.isBlack() == board[y][x].isBlack()) {
                 restoreBackgroundColors();
                 selectedX = x;
@@ -105,7 +117,7 @@ public class GameScene {
                 var options = rootService.getPlayerActionService().showMoveOptions(selectedX, selectedY);
                 for (Position pos : options) {
                     colorMap.put(buttonBoard[pos.yCord()][pos.xCord()], buttonBoard[pos.yCord()][pos.xCord()].getBackground());
-                    buttonBoard[pos.yCord()][pos.xCord()].setBackground(new Color(92, 226, 127));
+                    buttonBoard[pos.yCord()][pos.xCord()].setBackground(HIGHLIGHT);
                 }
             }
             else if (selectedX != -1) {

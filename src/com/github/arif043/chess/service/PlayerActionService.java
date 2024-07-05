@@ -9,6 +9,9 @@ import java.awt.*;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author Arif Ertugrul
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 public class PlayerActionService {
 
     private RootService rootService;
+    private Position[] positionsAfterCastling = new Position[2];
 
     public PlayerActionService(RootService rootService) {
         this.rootService = rootService;
@@ -25,7 +29,7 @@ public class PlayerActionService {
     public ArrayList<Position> showMoveOptions(int x, int y) {
         var game = rootService.getCurrentGame();
         var currentFigure = game.getBoard()[y][x];
-        rootService.getCurrentGame().getCurrentPlayer().isBlack()
+        checkCastling();
         return currentFigure.validateMoves(game.getBoard());
     }
 
@@ -35,13 +39,30 @@ public class PlayerActionService {
             System.err.println("Moving figure doesnt exist");
             return;
         }
+        if (board[newY][newX] != null && board[oldY][oldX].isBlack() == board[newY][newX].isBlack()) {
+            var king = board[oldY][oldX];
+            var rook = board[newY][newX];
+            // queenside castling
+            int kingStepX = board[newY][newX].getxPosition() == 0 ? -2 : 2;
+            int rookStepX = board[newY][newX].getxPosition() == 0 ? 3 : -2;
+
+            board[oldY][oldX] = board[newY][newX] = null;
+            king.setxPosition(king.getxPosition() + kingStepX);
+            rook.setxPosition(rook.getxPosition() + rookStepX);
+            board[oldY][king.getxPosition()] = king;
+            board[oldY][rook.getxPosition()] = rook;
+            positionsAfterCastling[0] = king.getPosition();
+            positionsAfterCastling[1] = rook.getPosition();
+            return;
+        }
+
         board[newY][newX] = board[oldY][oldX];
         board[newY][newX].setxPosition(newX);
         board[newY][newX].setyPosition(newY);
         board[oldY][oldX] = null;
     }
 
-    private void checkCastling() {
+    public boolean checkCastling() {
         var isBlack = rootService.getCurrentGame().getCurrentPlayer().isBlack();
         var board = rootService.getCurrentGame().getBoard();
         var player = rootService.getCurrentGame().getCurrentPlayer();
@@ -60,10 +81,40 @@ public class PlayerActionService {
                     }
                 }
             }
-        if (kingPos == null || rook1Pos == null || ((King) board[kingPos.yCord()][kingPos.xCord()]).isMoved() ||
-                ((Rook) board[rook1Pos.yCord()][rook1Pos.xCord()]).isMoved() && rook2Pos != null && ((Rook) board[rook2Pos.yCord()][rook2Pos.xCord()]).isMoved()) {
-            if (kingPos != null)
-                ((King) board[kingPos.yCord()][kingPos.xCord()]).setCastlingAble(false);
+        var king = (King) board[kingPos.yCord()][kingPos.xCord()];
+        var rook1 = rook1Pos != null ? (Rook) board[rook1Pos.yCord()][rook1Pos.xCord()] : null;
+        var rook2 = rook2Pos != null ? (Rook) board[rook2Pos.yCord()][rook2Pos.xCord()] : null;
+
+        king.setKingsideCastleAble(true);
+        king.setQueensideCastleAble(true);
+
+        if (rook1 == null || king.isMoved() || rook1.isMoved() && (rook2Pos == null || rook2.isMoved())) {
+            king.setKingsideCastleAble(false);
+            king.setQueensideCastleAble(false);
+            return false;
         }
+
+        if (rook2 != null) {
+            checkCastling2(board, rook1, king, 1, 4);
+            checkCastling2(board, rook1, king, 5, 7);
+        }
+        else if (rook1.getxPosition() == 0)
+            checkCastling2(board, rook1, king, 1, 4);
+        else checkCastling2(board, rook1, king, 5, 7);
+
+        return king.isQueensideCastleAble() || king.isKingsideCastleAble();
+    }
+
+    public Position[] getPositionAfterCastling() {
+        return positionsAfterCastling;
+    }
+
+    private void checkCastling2(Figure[][] board, Rook rook1, King king, int startX, int endX) {
+        for (int x = startX; x < endX; x++)
+            if (board[rook1.getyPosition()][x] != null)
+                if (startX == 1)
+                    king.setQueensideCastleAble(false);
+                else
+                    king.setKingsideCastleAble(false);
     }
 }
