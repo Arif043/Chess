@@ -28,7 +28,7 @@ public abstract class Figure {
     private boolean isBlack;
     private int xPosition, yPosition;
 
-    public Figure(int xPosition, int yPosition, boolean isBlack) {
+    protected Figure(int xPosition, int yPosition, boolean isBlack) {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
         this.isBlack = isBlack;
